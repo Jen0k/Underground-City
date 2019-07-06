@@ -1,0 +1,16 @@
+[
+{
+  "modid": "undercity",
+  "name": "Underground City",
+  "description": "Underground city built by an unknown civilization.",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["D'Chrono"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
