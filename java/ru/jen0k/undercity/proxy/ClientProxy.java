@@ -6,6 +6,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class ClientProxy extends CommonProxy
 {
@@ -28,6 +29,12 @@ public class ClientProxy extends CommonProxy
     {
         super.postInit(event);
 
+    }
+
+    @Override
+    public void serverInit(FMLServerStartingEvent event)
+    {
+        super.serverInit(event);
     }
 
     @Override

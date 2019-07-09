@@ -1,2 +1,7 @@
 item.uselessitem.name=Totally Useless Item
+
 tile.uselessblock.name=Totally Useless Block
+
+commands.tpdim.usage=/tpdimm [target player] <destination dimension> OR /tp [target player] <destination dimension> <x> <y> <z> [<yaw> <pitch>]
+commands.tpdim.success=Teleported %s to the %s
+commands.tpdim.success=Teleported %s to the %s at %s, %s, %s

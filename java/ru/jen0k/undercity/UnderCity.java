@@ -3,6 +3,7 @@ package ru.jen0k.undercity;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import ru.jen0k.undercity.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -36,5 +37,11 @@ public class UnderCity
     public void postInit(FMLPostInitializationEvent event)
     {
         proxy.postInit(event);
+    }
+
+    @Mod.EventHandler
+    public void serverInit(FMLServerStartingEvent event)
+    {
+        proxy.serverInit(event);
     }
 }
