@@ -7,6 +7,8 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.DimensionManager;
+import ru.jen0k.undercity.world.NullTeleporter;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -99,9 +101,19 @@ public class TPDimensionCommand extends CommandBase
             Pitch = (float)parseCoordinate(teleportationEntity.prevRotationPitch, args[argPos], true).getResult();
         }
 
+        if (!DimensionManager.isDimensionRegistered(targetDimmensionID))
+        {
+            throw new WrongUsageException("commands.tpdim.usage");
+        }
+
         teleportationEntity.dismountRidingEntity();
-        teleportationEntity.changeDimension(targetDimmensionID);
+        teleportationEntity.changeDimension(targetDimmensionID, new NullTeleporter());
+        teleportationEntity.motionX = 0.0f;
+        teleportationEntity.motionY = 0.0f;
+        teleportationEntity.motionZ = 0.0f;
         teleportationEntity.connection.setPlayerLocation(X, Y, Z, Yaw, Pitch);
+
+        notifyCommandListener(sender, this, "commands.tpdim.success", teleportationEntity.getName(), targetDimmensionID, X, Y, Z);
     }
 
     @Override
