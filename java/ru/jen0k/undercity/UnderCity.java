@@ -15,6 +15,8 @@ public class UnderCity
     static final String MODNAME = "Underground City";
     static final String MODVERSION = "1.0.0";
 
+    public static final int UNDERCITY_DIMMENSION_ID = 90;
+
     @SidedProxy(
             clientSide = "ru.jen0k.undercity.proxy.ClientProxy",
             serverSide = "ru.jen0k.undercity.proxy.CommonProxy"

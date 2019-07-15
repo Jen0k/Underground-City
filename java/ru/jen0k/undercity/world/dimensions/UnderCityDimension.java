@@ -8,7 +8,10 @@ import net.minecraft.world.biome.BiomePlains;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.ChunkGeneratorHell;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.common.DimensionManager;
+import ru.jen0k.undercity.UnderCity;
 import ru.jen0k.undercity.registries.DimensionRegistry;
+import ru.jen0k.undercity.world.chunkgenerators.UnderCityGenerator;
 
 public class UnderCityDimension extends WorldProvider
 {
@@ -20,13 +23,17 @@ public class UnderCityDimension extends WorldProvider
     @Override
     public DimensionType getDimensionType()
     {
-        return DimensionRegistry.UNDERCITY;
+        if (DimensionManager.isDimensionRegistered(UnderCity.UNDERCITY_DIMMENSION_ID))
+        {
+            return DimensionRegistry.UNDERCITY;
+        }
+        return null;
     }
 
     @Override
     public IChunkGenerator createChunkGenerator()
     {
-        return new ChunkGeneratorHell(this.world, this.world.getWorldInfo().isMapFeaturesEnabled(), this.world.getSeed());
+        return new UnderCityGenerator(this.world, this.world.getSeed());
     }
 
     @Override
