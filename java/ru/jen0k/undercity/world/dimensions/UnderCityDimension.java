@@ -33,7 +33,7 @@ public class UnderCityDimension extends WorldProvider
     @Override
     public IChunkGenerator createChunkGenerator()
     {
-        return new UnderCityGenerator(this.world, this.world.getSeed());
+        return new UnderCityGenerator(this.world);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class UnderCityDimension extends WorldProvider
     @Override
     public boolean isSurfaceWorld()
     {
-        return false;
+        return true;
     }
 }

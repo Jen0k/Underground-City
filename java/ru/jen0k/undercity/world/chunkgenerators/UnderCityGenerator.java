@@ -16,17 +16,19 @@ import java.util.Random;
 
 public class UnderCityGenerator implements IChunkGenerator
 {
-    public UnderCityGenerator(World world, long seed)
+    public UnderCityGenerator(World world)
     {
         this.world = world;
-        this.rand = new Random(seed);
+        this.rand = new Random(world.getSeed());
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
+    protected static final IBlockState GRASS = Blocks.GRASS.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 
     private final World world;
     private final Random rand;
+
 
     @Override
     public Chunk generateChunk(int chunk_x, int chunk_z) {
@@ -37,6 +39,7 @@ public class UnderCityGenerator implements IChunkGenerator
             for (int z = 0; z < 16; z++)
             {
                 chunkprimer.setBlockState(x, 0, z, BEDROCK);
+                chunkprimer.setBlockState(x, 1, z, GRASS);
             }
         }
 
@@ -55,8 +58,21 @@ public class UnderCityGenerator implements IChunkGenerator
     }
 
     @Override
-    public void populate(int x, int z) {
+    public void populate(int chunk_x, int chunk_z)
+    {
+        int block_x = chunk_x * 16;
+        int block_z = chunk_z * 16;
 
+        BlockPos blockPosition = new BlockPos(block_x, 0, block_z);
+
+        Biome chunkBiome = this.world.getBiome(blockPosition);
+
+        this.rand.setSeed(this.world.getSeed());
+        long k = this.rand.nextLong() / 2L * 2L + 1L;
+        long l = this.rand.nextLong() / 2L * 2L + 1L;
+        this.rand.setSeed((long)chunk_x * k + (long)chunk_z * l ^ this.world.getSeed());
+
+        chunkBiome.decorate(this.world, this.rand, blockPosition);
     }
 
     @Override
