@@ -16,8 +16,10 @@ import ru.jen0k.undercity.world.chunkgenerators.UnderCityGenerator;
 
 public class UnderCityDimension extends WorldProvider
 {
-    public UnderCityDimension()
+    @Override
+    protected void init()
     {
+        this.hasSkyLight = true;
         this.biomeProvider = new BiomeProviderSingle(BiomeRegistry.UNDERCITY_BIOME);
     }
 
