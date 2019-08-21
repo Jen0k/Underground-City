@@ -10,6 +10,7 @@ import net.minecraft.world.gen.ChunkGeneratorHell;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.DimensionManager;
 import ru.jen0k.undercity.UnderCity;
+import ru.jen0k.undercity.registries.BiomeRegistry;
 import ru.jen0k.undercity.registries.DimensionRegistry;
 import ru.jen0k.undercity.world.chunkgenerators.UnderCityGenerator;
 
@@ -17,7 +18,7 @@ public class UnderCityDimension extends WorldProvider
 {
     public UnderCityDimension()
     {
-        this.biomeProvider = new BiomeProviderSingle(Biomes.PLAINS);
+        this.biomeProvider = new BiomeProviderSingle(BiomeRegistry.UNDERCITY_BIOME);
     }
 
     @Override

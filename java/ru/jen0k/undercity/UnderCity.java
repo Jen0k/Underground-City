@@ -16,6 +16,7 @@ public class UnderCity
     static final String MODVERSION = "1.0.0";
 
     public static final int UNDERCITY_DIMMENSION_ID = 90;
+    public static final String UNDERCITY_BIOME_NAME = "Underground City Biome";
 
     @SidedProxy(
             clientSide = "ru.jen0k.undercity.proxy.ClientProxy",
