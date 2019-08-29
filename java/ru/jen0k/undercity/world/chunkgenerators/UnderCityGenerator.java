@@ -26,6 +26,8 @@ public class UnderCityGenerator implements IChunkGenerator
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     protected static final IBlockState GRASS = Blocks.GRASS.getDefaultState();
+    protected static final IBlockState WATER = Blocks.WATER.getDefaultState();
+    protected static final IBlockState DIRT = Blocks.DIRT.getDefaultState();
     protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 
@@ -37,19 +39,39 @@ public class UnderCityGenerator implements IChunkGenerator
     public Chunk generateChunk(int chunk_x, int chunk_z) {
         ChunkPrimer chunkprimer = new ChunkPrimer();
 
+        long mainX = chunk_x / 10;
+        long mainZ = chunk_z / 10;
+        int partX = chunk_x % 10;
+        int partZ = chunk_z % 10;
+        double scaledX = mainX + (0.1 * partX);
+        double scaledZ = mainZ + (0.1 * partZ);
+
         for (int x = 0; x < 16; x++)
         {
             for (int z = 0; z < 16; z++)
             {
-                int baseHeiht = 70;
-                int height = baseHeiht + (int)Math.floor(noisePerlin.Noise2D(chunk_x + (1.0D / 16) * x, chunk_z + (1.0D / 16) * z, 3, 0.5) * 3);
+                int baseHeiht = 100;
+
+                int randomPart = (int)Math.floor(noisePerlin.Noise2D(scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z, 6, 0.5) * 100);
+                int height = baseHeiht + randomPart;
 
                 chunkprimer.setBlockState(x, 0, z, BEDROCK);
                 for (int i = 1; i < height; i++)
                 {
                     chunkprimer.setBlockState(x, i, z, STONE);
                 }
-                chunkprimer.setBlockState(x, height, z, GRASS);
+                if (randomPart < 0)
+                {
+                    chunkprimer.setBlockState(x, height, z, GRASS);
+//                    for (int i = randomPart; i < 0; i++)
+//                    {
+//                        chunkprimer.setBlockState(x, height + i + 1, z, WATER);
+//                    }
+                }
+                else
+                {
+                    chunkprimer.setBlockState(x, height, z, GRASS);
+                }
             }
         }
 
