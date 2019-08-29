@@ -9,6 +9,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
+import ru.jen0k.undercity.helpers.NoisePerlin2D;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,15 +21,17 @@ public class UnderCityGenerator implements IChunkGenerator
     {
         this.world = world;
         this.rand = new Random(world.getSeed());
+        this.noisePerlin = new NoisePerlin2D(world.getSeed(), 1024);
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     protected static final IBlockState GRASS = Blocks.GRASS.getDefaultState();
+    protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 
     private final World world;
     private final Random rand;
-
+    private final NoisePerlin2D noisePerlin;
 
     @Override
     public Chunk generateChunk(int chunk_x, int chunk_z) {
@@ -38,8 +41,15 @@ public class UnderCityGenerator implements IChunkGenerator
         {
             for (int z = 0; z < 16; z++)
             {
+                int baseHeiht = 70;
+                int height = baseHeiht + (int)Math.floor(noisePerlin.Noise2D(chunk_x + (1.0D / 16) * x, chunk_z + (1.0D / 16) * z, 3, 0.5) * 3);
+
                 chunkprimer.setBlockState(x, 0, z, BEDROCK);
-                chunkprimer.setBlockState(x, 1, z, GRASS);
+                for (int i = 1; i < height; i++)
+                {
+                    chunkprimer.setBlockState(x, i, z, STONE);
+                }
+                chunkprimer.setBlockState(x, height, z, GRASS);
             }
         }
 
@@ -67,10 +77,13 @@ public class UnderCityGenerator implements IChunkGenerator
 
         Biome chunkBiome = this.world.getBiome(blockPosition);
 
-        this.rand.setSeed(this.world.getSeed());
-        long k = this.rand.nextLong() / 2L * 2L + 1L;
-        long l = this.rand.nextLong() / 2L * 2L + 1L;
-        this.rand.setSeed((long)chunk_x * k + (long)chunk_z * l ^ this.world.getSeed());
+//      this.rand.setSeed(this.world.getSeed());
+//      long k = this.rand.nextLong() / 2L * 2L + 1L;
+//      long l = this.rand.nextLong() / 2L * 2L + 1L;
+//      this.rand.setSeed((long)chunk_x * k + (long)chunk_z * l ^ this.world.getSeed());
+
+        this.rand.setSeed(this.world.getSeed() + chunk_x);
+        this.rand.setSeed(this.rand.nextLong() + chunk_z);
 
         chunkBiome.decorate(this.world, this.rand, blockPosition);
     }
