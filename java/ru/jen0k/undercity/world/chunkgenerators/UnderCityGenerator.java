@@ -9,6 +9,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
+import ru.jen0k.undercity.helpers.NoisePerlin;
 import ru.jen0k.undercity.helpers.NoisePerlin2D;
 
 import javax.annotation.Nullable;
@@ -22,6 +23,8 @@ public class UnderCityGenerator implements IChunkGenerator
         this.world = world;
         this.rand = new Random(world.getSeed());
         this.noisePerlin = new NoisePerlin2D(world.getSeed(), 1024);
+
+        NoisePerlin pp = new NoisePerlin(world.getSeed(), 1, 256);
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();

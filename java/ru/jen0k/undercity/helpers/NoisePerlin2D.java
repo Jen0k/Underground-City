@@ -26,8 +26,8 @@ public class NoisePerlin2D
 
     private Vector2d GetVectorForPoint(long x, long y)
     {
-        random.setSeed(x + seedRandom);
-        random.setSeed(random.nextInt() + y);
+        random.setSeed(x ^ y);
+        //random.setSeed(random.nextInt() + y);
 
         return pregenVectors[Math.abs(random.nextInt()) % vectorsCount];
     }
