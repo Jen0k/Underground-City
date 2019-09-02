@@ -24,7 +24,9 @@ public class UnderCityGenerator implements IChunkGenerator
         this.rand = new Random(world.getSeed());
         this.noisePerlin = new NoisePerlin2D(world.getSeed(), 1024);
 
-        NoisePerlin pp = new NoisePerlin(world.getSeed(), 1, 256);
+        NoisePerlin pp = new NoisePerlin(world.getSeed(), 3, 256);
+
+        double dd = pp.Noise(10.5, 22.3, 77.1);
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();

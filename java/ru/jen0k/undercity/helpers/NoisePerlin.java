@@ -1,7 +1,6 @@
 package ru.jen0k.undercity.helpers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class NoisePerlin
 {
@@ -58,13 +57,31 @@ public class NoisePerlin
             this.pregenVectors[i] = newVector;
         }
 
-        Object x = product(Arrays.asList("x", "x+1"), Arrays.asList("y", "y+1"), Arrays.asList("z", "z+1") );
+        // Генерируем сочетания соседних относительных координат векторов для заданного количества измерений для обхода в цикле.
+        if (dimmensions > 1) {
+            int[][] coordinatePairs = new int[this.dimmensions][2];
+            for (int d = 0; d < this.dimmensions; d++) {
+                coordinatePairs[d] = new int[]{0, 1};
+            }
+
+            int[][] firstSet = new int[coordinatePairs[0].length][coordinatePairs.length];
+            for (int i = 0; i < coordinatePairs[0].length; i++) {
+                firstSet[i][0] = coordinatePairs[0][i];
+            }
+
+            this.coordinatesMap = GenerateCoordinatesMap(1, coordinatePairs, firstSet);
+        }
+        else
+        {
+            this.coordinatesMap = new int[0][0];
+        }
     }
 
     private int dimmensions;
     private double[][] pregenVectors;
+    private int[][] coordinatesMap;
 
-    private double Dot(double a[], double b[])
+    private double Dot(double[] a, double[] b)
     {
         double result = 0;
         for (int n = 0; n < a.length; n++)
@@ -84,23 +101,25 @@ public class NoisePerlin
         return pregenVectors[Math.abs((int)(position % pregenVectors.length))];
     }
 
-    private List<?> product(List<?>... a) {
-        if (a.length >= 2) {
-            List<?> product = a[0];
-            for (int i = 1; i < a.length; i++) {
-                product = product(product, a[i]);
+    private int[][] GenerateCoordinatesMap(int index, int[][] map, int[][] alredyGenerated)
+    {
+        int[][] newGeneration = new int[alredyGenerated.length * map[index].length][map.length];;
+
+        for (int i = 0; i < alredyGenerated.length; i++)
+        {
+            for (int j = 0; j < map[index].length; j++)
+            {
+                newGeneration[j + (i * map[index].length)] = alredyGenerated[i].clone();
+                newGeneration[j + (i * map[index].length)][index] = map[index][j];
             }
-            return product;
         }
 
-        return Collections.emptyList();
-    }
+        if (index < map.length - 1)
+        {
+            newGeneration = GenerateCoordinatesMap(index + 1, map, newGeneration);
+        }
 
-    private <A, B> List<?> product(List<A> a, List<B> b) {
-        return Optional.of(a.stream()
-                .map(e1 -> Optional.of(b.stream().map(e2 -> Arrays.asList(e1, e2)).collect(Collectors.toList())).orElse(Collections.emptyList()))
-                .flatMap(List::stream)
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
+        return newGeneration;
     }
 
     public double Noise(double... coordinates) throws IllegalArgumentException
@@ -110,10 +129,10 @@ public class NoisePerlin
             throw new IllegalArgumentException("The number of coordinates should be equal to the number of dimmensions!");
         }
 
-        double[] nodePosition = new double[dimmensions];
+        long[] nodePosition = new long[dimmensions];
         for (int n = 0; n < dimmensions; n++)
         {
-            nodePosition[n] = Math.floor(coordinates[n]);
+            nodePosition[n] = (long)Math.floor(coordinates[n]);
         }
 
         double[] localCoordinates = new double[dimmensions];
@@ -122,13 +141,37 @@ public class NoisePerlin
             localCoordinates[n] =  coordinates[n] - nodePosition[n];
         }
 
-        int nodeVectorsCount = (int)Math.pow(2, dimmensions);
-        double[][] nodeVectors = new double[nodeVectorsCount][dimmensions];
-        for (int d = 0; d < dimmensions; d++)
+        double[][] neighborsVectors = new double[coordinatesMap.length][dimmensions];
+        for (int p = 0; p < coordinatesMap.length; p++)
         {
-
+            long[] neighborCoordinates = new long[dimmensions];
+            for (int d = 0; d < dimmensions; d++)
+            {
+                neighborCoordinates[d] = nodePosition[d] + coordinatesMap[p][d];
+            }
+            neighborsVectors[p] = GetVectorForPoint(neighborCoordinates);
         }
 
+        double[][] localVectors = new double[coordinatesMap.length][dimmensions];
+        for (int p = 0; p < coordinatesMap.length; p++)
+        {
+            for (int d = 0; d < dimmensions; d++)
+            {
+                localVectors[p][d] = localCoordinates[d] - coordinatesMap[p][d];
+            }
+        }
+
+        double[] dots = new double[coordinatesMap.length];
+        for (int p = 0; p < coordinatesMap.length; p++)
+        {
+            dots[p] = Dot(neighborsVectors[p], localVectors[p]);
+        }
+
+        double[] smoothedLocalCoordinates = new double[dimmensions];
+        for (int d = 0; d < dimmensions; d++)
+        {
+            smoothedLocalCoordinates[d] = MathFunctions.Quintic(localCoordinates[d]);
+        }
 
         return 0;
     }
