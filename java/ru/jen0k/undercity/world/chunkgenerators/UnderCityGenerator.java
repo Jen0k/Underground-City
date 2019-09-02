@@ -22,11 +22,8 @@ public class UnderCityGenerator implements IChunkGenerator
     {
         this.world = world;
         this.rand = new Random(world.getSeed());
-        this.noisePerlin = new NoisePerlin2D(world.getSeed(), 1024);
 
-        NoisePerlin pp = new NoisePerlin(world.getSeed(), 3, 256);
-
-        double dd = pp.Noise(10.5, 22.3, 77.1);
+        this.noisePerlin =  new NoisePerlin(world.getSeed(), 2, 32);
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
@@ -38,7 +35,7 @@ public class UnderCityGenerator implements IChunkGenerator
 
     private final World world;
     private final Random rand;
-    private final NoisePerlin2D noisePerlin;
+    private final NoisePerlin noisePerlin;
 
     @Override
     public Chunk generateChunk(int chunk_x, int chunk_z) {
@@ -57,7 +54,7 @@ public class UnderCityGenerator implements IChunkGenerator
             {
                 int baseHeiht = 100;
 
-                int randomPart = (int)Math.floor(noisePerlin.Noise2D(scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z, 6, 0.5) * 100);
+                int randomPart = (int)Math.floor(noisePerlin.Noise(6, 0.5,scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z) * 100);
                 int height = baseHeiht + randomPart;
 
                 chunkprimer.setBlockState(x, 0, z, BEDROCK);

@@ -122,6 +122,22 @@ public class NoisePerlin
         return newGeneration;
     }
 
+    private double LerpRecursively(int dimmensionIndex, double[] localCoordinates, double[] dotProducts)
+    {
+        double[] interpolatedDotProducts = new double[dotProducts.length / 2];
+        for (int i = 0; i < dotProducts.length ; i += 2)
+        {
+            interpolatedDotProducts[i / 2] = MathFunctions.Lerp(dotProducts[i], dotProducts[i+1], localCoordinates[dimmensions - dimmensionIndex - 1]);
+        }
+
+        if (interpolatedDotProducts.length > 1)
+        {
+            return LerpRecursively(dimmensionIndex + 1, localCoordinates, interpolatedDotProducts);
+        }
+
+        return interpolatedDotProducts[0];
+    }
+
     public double Noise(double... coordinates) throws IllegalArgumentException
     {
         if (coordinates.length != this.dimmensions)
@@ -161,10 +177,10 @@ public class NoisePerlin
             }
         }
 
-        double[] dots = new double[coordinatesMap.length];
+        double[] dotProducts = new double[coordinatesMap.length];
         for (int p = 0; p < coordinatesMap.length; p++)
         {
-            dots[p] = Dot(neighborsVectors[p], localVectors[p]);
+            dotProducts[p] = Dot(neighborsVectors[p], localVectors[p]);
         }
 
         double[] smoothedLocalCoordinates = new double[dimmensions];
@@ -173,6 +189,29 @@ public class NoisePerlin
             smoothedLocalCoordinates[d] = MathFunctions.Quintic(localCoordinates[d]);
         }
 
-        return 0;
+        return LerpRecursively(0, smoothedLocalCoordinates, dotProducts);
+    }
+
+    public double Noise(int octaves, double persistence, double... coordinates)
+    {
+        double amplitude = 1;
+
+        double max = 0;
+        double result = 0;
+
+        while (octaves-- > 0)
+        {
+            max += amplitude;
+            result += Noise(coordinates) * amplitude;
+            amplitude *= persistence;
+
+            for (int i = 0; i < coordinates.length; i++)
+            {
+                coordinates[i] *= 2;
+
+            }
+        }
+
+        return result / max;
     }
 }
