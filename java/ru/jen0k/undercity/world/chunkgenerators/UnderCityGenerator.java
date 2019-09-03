@@ -10,7 +10,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
 import ru.jen0k.undercity.helpers.NoisePerlin;
-import ru.jen0k.undercity.helpers.NoisePerlin2D;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,6 +32,7 @@ public class UnderCityGenerator implements IChunkGenerator
     protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
     protected static final IBlockState GLOWSTONE = Blocks.GLOWSTONE.getDefaultState();
+    protected static final IBlockState GLASS = Blocks.GLASS.getDefaultState();
 
     private final World world;
     private final Random rand;
@@ -42,12 +42,12 @@ public class UnderCityGenerator implements IChunkGenerator
     public Chunk generateChunk(int chunk_x, int chunk_z) {
         ChunkPrimer chunkprimer = new ChunkPrimer();
 
-        long mainX = chunk_x / 10;
-        long mainZ = chunk_z / 10;
-        int partX = chunk_x % 10;
-        int partZ = chunk_z % 10;
-        double scaledX = mainX + (0.1 * partX);
-        double scaledZ = mainZ + (0.1 * partZ);
+        long mainX = chunk_x / 5;
+        long mainZ = chunk_z / 5;
+        int partX = chunk_x % 5;
+        int partZ = chunk_z % 5;
+        double scaledX = mainX + (0.2 * partX);
+        double scaledZ = mainZ + (0.2 * partZ);
 
         for (int x = 0; x < 16; x++)
         {
@@ -61,12 +61,25 @@ public class UnderCityGenerator implements IChunkGenerator
                         continue;
                     }
 
-                    double noiseValue = noisePerlin.Noise(6, 0.5,
-                            scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z, (0.1 / 16) * y);
+                    double noiseValue = noisePerlin.Noise(2, 0.5,
+                            scaledX + (0.2 / 16) * x, scaledZ + (0.2 / 16) * z, (0.2 / 16) * y);
 
                     if (noiseValue > 0)
                     {
-                        chunkprimer.setBlockState(x, y, z, GLOWSTONE);
+                        if ((int)Math.floor(noiseValue * 1000000) % 100 == 0)
+                        {
+                            chunkprimer.setBlockState(x, y, z, GLOWSTONE);
+                            continue;
+                        }
+
+                        if (noiseValue > 0.02)
+                        {
+                            chunkprimer.setBlockState(x, y, z, WATER);
+                        }
+                        else if (noiseValue > 0 && noiseValue <= 0.02)
+                        {
+                            chunkprimer.setBlockState(x, y, z, GLASS);
+                        }
                     }
                     else
                     {

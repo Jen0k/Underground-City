@@ -103,7 +103,7 @@ public class NoisePerlin
 
     private int[][] GenerateCoordinatesMap(int index, int[][] map, int[][] alredyGenerated)
     {
-        int[][] newGeneration = new int[alredyGenerated.length * map[index].length][map.length];;
+        int[][] newGeneration = new int[alredyGenerated.length * map[index].length][map.length];
 
         for (int i = 0; i < alredyGenerated.length; i++)
         {
