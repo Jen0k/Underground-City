@@ -23,7 +23,7 @@ public class UnderCityGenerator implements IChunkGenerator
         this.world = world;
         this.rand = new Random(world.getSeed());
 
-        this.noisePerlin =  new NoisePerlin(world.getSeed(), 2, 32);
+        this.noisePerlin =  new NoisePerlin(world.getSeed(), 3, 32);
     }
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
@@ -32,6 +32,7 @@ public class UnderCityGenerator implements IChunkGenerator
     protected static final IBlockState DIRT = Blocks.DIRT.getDefaultState();
     protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
     protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+    protected static final IBlockState GLOWSTONE = Blocks.GLOWSTONE.getDefaultState();
 
     private final World world;
     private final Random rand;
@@ -52,9 +53,36 @@ public class UnderCityGenerator implements IChunkGenerator
         {
             for (int z = 0; z < 16; z++)
             {
+                for (int y = 0; y <= 200; y++)
+                {
+                    if (y == 0 || y == 200)
+                    {
+                        chunkprimer.setBlockState(x, y, z, BEDROCK);
+                        continue;
+                    }
+
+                    double noiseValue = noisePerlin.Noise(6, 0.5,
+                            scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z, (0.1 / 16) * y);
+
+                    if (noiseValue > 0)
+                    {
+                        chunkprimer.setBlockState(x, y, z, GLOWSTONE);
+                    }
+                    else
+                    {
+                        chunkprimer.setBlockState(x, y, z, AIR);
+                    }
+                }
+            }
+        }
+
+        /*for (int x = 0; x < 16; x++)
+        {
+            for (int z = 0; z < 16; z++)
+            {
                 int baseHeiht = 100;
 
-                int randomPart = (int)Math.floor(noisePerlin.Noise(6, 0.5,scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z) * 100);
+                int randomPart = (int)Math.floor(noisePerlin.Noise(6, 0.5, scaledX + (0.1 / 16) * x, scaledZ + (0.1 / 16) * z) * 100);
                 int height = baseHeiht + randomPart;
 
                 chunkprimer.setBlockState(x, 0, z, BEDROCK);
@@ -75,7 +103,7 @@ public class UnderCityGenerator implements IChunkGenerator
                     chunkprimer.setBlockState(x, height, z, GRASS);
                 }
             }
-        }
+        }*/
 
         Chunk newChunk = new Chunk(this.world, chunkprimer, chunk_x, chunk_z);
         Biome[] biomesForNewChunk = this.world.getBiomeProvider().getBiomes((Biome[])null, chunk_x * 16, chunk_z * 16, 16, 16);
@@ -109,7 +137,7 @@ public class UnderCityGenerator implements IChunkGenerator
         this.rand.setSeed(this.world.getSeed() + chunk_x);
         this.rand.setSeed(this.rand.nextLong() + chunk_z);
 
-        chunkBiome.decorate(this.world, this.rand, blockPosition);
+        //chunkBiome.decorate(this.world, this.rand, blockPosition);
     }
 
     @Override

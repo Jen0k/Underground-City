@@ -48,6 +48,6 @@ public class UnderCityDimension extends WorldProvider
     @Override
     public boolean isSurfaceWorld()
     {
-        return true;
+        return false;
     }
 }
