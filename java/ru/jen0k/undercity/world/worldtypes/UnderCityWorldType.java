@@ -6,7 +6,7 @@ import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
 import ru.jen0k.undercity.registries.BiomeRegistry;
-import ru.jen0k.undercity.world.chunkgenerators.UnderCityGenerator;
+import ru.jen0k.undercity.world.chunkgenerators.UnderCityCaveGenerator;
 
 public class UnderCityWorldType extends WorldType
 {
@@ -22,6 +22,6 @@ public class UnderCityWorldType extends WorldType
 
     @Override
     public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
-        return new UnderCityGenerator(world);
+        return new UnderCityCaveGenerator(world);
     }
 }
