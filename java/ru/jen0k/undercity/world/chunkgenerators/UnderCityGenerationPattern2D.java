@@ -44,6 +44,24 @@ public class UnderCityGenerationPattern2D implements INineTreeNode {
 
         Arrays.fill(new_connections, false);
 
+        if (childPos_x == 0)
+        {
+            new_connections[GRID_BASE * 3 + GRID_BASE / 2] = connections[GRID_BASE * 3 + childPos_z];
+        }
+        else if (childPos_x == GRID_BASE - 1)
+        {
+            new_connections[GRID_BASE + GRID_BASE / 2] = connections[GRID_BASE + childPos_z];;
+        }
+
+        if (childPos_z == 0)
+        {
+            new_connections[GRID_BASE / 2] = connections[childPos_x];
+        }
+        else if (childPos_z == GRID_BASE - 1)
+        {
+            new_connections[GRID_BASE * 2 + GRID_BASE / 2] = connections[GRID_BASE * 2 + childPos_x];
+        }
+
         if (childPos_x > 0 && childs[childPos_x - 1][childPos_z] != null)
         {
 

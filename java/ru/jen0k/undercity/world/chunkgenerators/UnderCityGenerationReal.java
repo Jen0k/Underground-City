@@ -5,7 +5,8 @@ import net.minecraft.block.Block;
 public class UnderCityGenerationReal implements INineTreeNode {
 
     @Override
-    public Block[][][] GenerateRegion(int chunk_x, int chunk_z, int random_seed) {
-
+    public Block[][][] GenerateRegion(int chunk_x, int chunk_z, int random_seed)
+    {
+        return null;
     }
 }
